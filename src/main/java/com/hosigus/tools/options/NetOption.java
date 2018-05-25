@@ -12,7 +12,7 @@ import java.util.Map;
 public class NetOption {
     private String url;
     private Map<String, String> paramSet;
-    private Class<JSONBean> beanClass;
+    private Class<? extends JSONBean> beanClass;
 
 
     public NetOption(String url) {
@@ -27,7 +27,7 @@ public class NetOption {
         return this;
     }
 
-    public NetOption beanClass(Class<JSONBean> beanClass) {
+    public NetOption beanClass(Class<? extends JSONBean> beanClass) {
         this.beanClass = beanClass;
         return this;
     }
@@ -40,7 +40,7 @@ public class NetOption {
         return paramSet;
     }
 
-    public Class<JSONBean> getBeanClass() {
+    public Class<? extends JSONBean> getBeanClass() {
         return beanClass;
     }
 }

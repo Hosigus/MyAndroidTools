@@ -49,7 +49,7 @@ public class LogUtils {
         return new LogUtils.LogBuilder(tag);
     }
 
-    static class LogBuilder{
+    public static class LogBuilder{
         private String tag;
 
         public LogBuilder(String tag) {
