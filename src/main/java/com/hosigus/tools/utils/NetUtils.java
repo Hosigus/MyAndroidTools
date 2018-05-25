@@ -37,9 +37,10 @@ public class NetUtils {
 
                     conn.setConnectTimeout(5000);
                     conn.setReadTimeout(5000);
-
                     conn.setRequestMethod("POST");
-                    if(options.getParamSet() == null || options.getParamSet().isEmpty()){
+                    conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+
+                    if(!(options.getParamSet() == null || options.getParamSet().isEmpty())){
                         conn.setDoOutput(true);
                         OutputStream os = conn.getOutputStream();
                         os.write(formParamString(options.getParamSet()).getBytes());
@@ -48,42 +49,41 @@ public class NetUtils {
                     }
 
                     int resCode = conn.getResponseCode();
-                    if (resCode == HttpsURLConnection.HTTP_OK) {
-
-                        InputStream inputStream = conn.getInputStream();
-                        Scanner in = new Scanner(inputStream);
-                        StringBuilder builder = new StringBuilder();
-                        while (in.hasNextLine()) {
-                            builder.append(in.nextLine()).append("\n");
-                        }
-                        final String jsonStr = builder.toString();
-                        ThreadUtils.getInstance().post(new Runnable() {
-                            @Override
-                            public void run() {
-                                try {
-                                    JSONBean bean;
-                                    if (options.getBeanClass() == null) {
-                                        bean = new JSONBean() {
-                                            @Override
-                                            public void parser(JSONObject object) {
-                                                setJson(object.toString());
-                                            }
-                                        };
-                                    } else {
-                                        bean = options.getBeanClass().newInstance();
-                                    }
-                                    bean.setJson(jsonStr);
-                                    bean.parser(new JSONObject(jsonStr));
-                                    callback.onSuccess(bean);
-                                } catch (InstantiationException | IllegalAccessException | JSONException e) {
-                                    callback.onFail(e);
-                                }
-                            }
-                        });
-
-                    } else {
+                    if (resCode != HttpsURLConnection.HTTP_OK) {
                         callback.onFail(new Exception(String.valueOf(resCode)));
+                        return;
                     }
+
+                    InputStream inputStream = conn.getInputStream();
+                    Scanner in = new Scanner(inputStream);
+                    StringBuilder builder = new StringBuilder();
+                    while (in.hasNextLine()) {
+                        builder.append(in.nextLine()).append("\n");
+                    }
+                    final String jsonStr = builder.toString();
+                    ThreadUtils.getInstance().post(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                JSONBean bean;
+                                if (options.getBeanClass() == null) {
+                                    bean = new JSONBean() {
+                                        @Override
+                                        public void parser(JSONObject object) {
+                                            setJson(object.toString());
+                                        }
+                                    };
+                                } else {
+                                    bean = options.getBeanClass().newInstance();
+                                }
+                                bean.setJson(jsonStr);
+                                bean.parser(new JSONObject(jsonStr));
+                                callback.onSuccess(bean);
+                            } catch (InstantiationException | IllegalAccessException | JSONException e) {
+                                callback.onFail(e);
+                            }
+                        }
+                    });
                 } catch (Exception e) {
                     callback.onFail(e);
                 }
