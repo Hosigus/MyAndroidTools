@@ -4,6 +4,14 @@
 
 
 
+### - Download
+
+```
+implementation 'com.hosigus:tools:1.3'
+```
+
+
+
 ### - What it contains ?
 
 - *DensityUtils*
