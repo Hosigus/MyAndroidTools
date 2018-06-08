@@ -12,7 +12,7 @@ implementation 'com.hosigus:tools:1.3'
 
 
 
-### - What does it contains ?
+### - What it contains ?
 
 - *DensityUtils*
 - *DownloadManager*
@@ -42,7 +42,7 @@ implementation 'com.hosigus:tools:1.3'
 
 
 
-###  - How to use it ?
+###  - How to use it ? [[show me demo](https://github.com/Hosigus/MyToolsDemo)]
 
 - *DownloadManager*
   1. init manager
@@ -116,4 +116,4 @@ implementation 'com.hosigus:tools:1.3'
      executeOption(this@XXXActivity, requestCode)
      ```
 
-- (wait for update)
+- [update later]
