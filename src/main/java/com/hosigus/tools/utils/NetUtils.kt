@@ -68,6 +68,12 @@ fun post(options: NetOption, callback: NetCallback) {
             conn.readTimeout = 5000
             conn.requestMethod = "POST"
 
+            if (options.headSet != null) {
+                for (key in options.headSet!!.keys) {
+                    conn.setRequestProperty(key, options.headSet!![key])
+                }
+            }
+            
             if (options.paramSet != null) {
                 conn.doOutput = true
                 val os = conn.outputStream
@@ -76,11 +82,6 @@ fun post(options: NetOption, callback: NetCallback) {
                 os.close()
             }
 
-            if (options.headSet != null) {
-                for (key in options.headSet!!.keys) {
-                    conn.setRequestProperty(key, options.headSet!![key])
-                }
-            }
 
             val resCode = conn.responseCode
             if (resCode != HttpsURLConnection.HTTP_OK) {
